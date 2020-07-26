@@ -24,6 +24,11 @@ class ProductosSpider(scrapy.Spider):
             absolute_url = response.urljoin(product)
             yield Request(absolute_url, callback=self.parse_product)
 
+        # pagina siguiente
+        next_page_url = response.xpath('//li[@class="andes-pagination__button andes-pagination__button--next"]/a/@href').extract_first()
+        absolute_next_page_url = response.urljoin(next_page_url)
+        yield Request(absolute_next_page_url)
+
     def parse_product(self, response):
         titulo = response.xpath('//h1//text()').extract_first()
         descripcion = response.xpath('//*[@class="item-description__text"]/p/text()').extract_first()
